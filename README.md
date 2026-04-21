@@ -2,7 +2,7 @@
 
 A fully local RAG-powered chatbot that lets you upload any PDF and ask questions about it — no API keys, no data leaves your machine.
 
-Built as a practical demonstration of Retrieval-Augmented Generation (RAG) using LangChain, FAISS, and Ollama.
+Built as a practical demonstration of Retrieval-Augmented Generation (RAG) using LangChain, FAISS, and Ollama. Exposed via both a Streamlit UI and a FastAPI backend.
 
 ---
 
@@ -11,6 +11,7 @@ Built as a practical demonstration of Retrieval-Augmented Generation (RAG) using
 | Layer | Tool |
 |---|---|
 | UI | Streamlit |
+| API | FastAPI |
 | LLM | Ollama (llama3.2) |
 | Embeddings | Ollama (nomic-embed-text) |
 | Vector Store | FAISS |
@@ -67,12 +68,18 @@ cd pdf-qa-chatbot
 pip install -r requirements.txt
 ```
 
-### 5. Run the app
+### 5a. Run the Streamlit UI
 ```bash
 streamlit run app.py
 ```
+Opens at `http://localhost:8501`
 
-Your browser will open at `http://localhost:8501`
+### 5b. Run the FastAPI backend
+```bash
+uvicorn main:app --reload
+```
+Opens at `http://localhost:8000`  
+Interactive API docs at `http://localhost:8000/docs`
 
 ---
 
@@ -80,6 +87,9 @@ Your browser will open at `http://localhost:8501`
 
 ```
 streamlit
+fastapi
+uvicorn
+python-multipart
 langchain
 langchain-community
 langchain-core
@@ -95,12 +105,46 @@ faiss-cpu
 - **Upload any PDF** and start chatting with it instantly
 - **Fully local** — runs on your machine, no API keys needed
 - **Source chunk viewer** — see exactly which part of the PDF the answer came from
+- **Streamlit UI** for interactive use
+- **FastAPI backend** for programmatic/API access
 - **Configurable settings** via sidebar:
   - Swap Ollama models on the fly
   - Adjust chunk size and overlap
   - Control how many chunks are retrieved (k)
 - **Conversation history** preserved within the session
 - **Clear chat** button to reset and upload a new PDF
+
+---
+
+## 🔌 API Endpoints
+
+| Method | Route | Description |
+|---|---|---|
+| `GET` | `/` | Health check |
+| `POST` | `/upload` | Upload and index a PDF |
+| `POST` | `/ask` | Ask a question about an uploaded PDF |
+| `GET` | `/sessions` | List all active sessions |
+| `DELETE` | `/sessions/{session_id}` | Delete a session and free memory |
+
+### Example Usage
+
+**Upload a PDF:**
+```bash
+curl -X POST "http://localhost:8000/upload" \
+  -F "file=@yourfile.pdf"
+```
+
+**Ask a question:**
+```bash
+curl -X POST "http://localhost:8000/ask" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "session_id": "yourfile",
+    "question": "What is this document about?",
+    "model_name": "llama3.2",
+    "k_docs": 3
+  }'
+```
 
 ---
 
@@ -117,8 +161,10 @@ faiss-cpu
 ```
 pdf-qa-chatbot/
 │
-├── app.py              # Main Streamlit application
+├── app.py              # Streamlit UI
+├── main.py             # FastAPI backend
 ├── requirements.txt    # Python dependencies
+├── .gitignore
 └── README.md           # You are here
 ```
 
@@ -148,6 +194,6 @@ pdf-qa-chatbot/
 
 ## 👤 Author
 
-**Soham Das**
-[github.com/sassyredfox](https://github.com/sassyredfox)
+**Soham Das**  
+[github.com/sassyredfox](https://github.com/sassyredfox)  
 soham.d.info@gmail.com
