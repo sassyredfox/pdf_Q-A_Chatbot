@@ -4,6 +4,12 @@ A fully local RAG-powered chatbot that lets you upload any PDF and ask questions
 
 Built as a practical demonstration of Retrieval-Augmented Generation (RAG) using LangChain, FAISS, and Ollama. Exposed via both a Streamlit UI and a FastAPI backend.
 
+## 🚀 Live Demo
+
+**[Try it here → pdfq-achatbot-ukgitnhcdnyvlnwkemsfu6.streamlit.app](https://pdfq-achatbot-ukgitnhcdnyvlnwkemsfu6.streamlit.app/)**
+
+> Note: The live demo requires Ollama running locally. Clone the repo and run it yourself for full functionality.
+
 ---
 
 ## 🛠️ Tech Stack
